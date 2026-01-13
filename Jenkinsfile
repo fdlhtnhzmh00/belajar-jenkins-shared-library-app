@@ -5,6 +5,13 @@ import fdlhtnhzmh.jenkins.Output;
 pipeline {
     agent any 
     stages {
+        stage("Maven Build") {
+            steps {
+                script {
+                    maven("clean compile")
+                }
+            }
+        }
         stage("Global Variable") {
             steps {
                 script {
