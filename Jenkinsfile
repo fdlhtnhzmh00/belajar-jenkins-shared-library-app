@@ -5,6 +5,16 @@ import fdlhtnhzmh.jenkins.Output;
 pipeline {
     agent any 
     stages {
+        stage("Hello Person") {
+            steps {
+                script {
+                    hello.person([
+                        firstName: "Fadilah",
+                        lastName: "Tun Hazimah"
+                    ])
+                }
+            }
+        }
         stage("Maven Build") {
             steps {
                 script {
