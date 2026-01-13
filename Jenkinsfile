@@ -3,15 +3,21 @@ pipeline {
 
     environment {
         AUTHOR = "Fadilah Tun Hazimah"
-        EMAIL = "105841118323@student.unismuh.ac.id"
-        WEB = "https://pinterest.com/curateaofficial"
+    }
+
+    parameters {
+        string(name: "NAME", defaultValue: "Guest", description: "What is your name?")
+        text(name: "DESCRIPTION", defaultValue: "Guest", description: "Tell me about you")
+        booleanParam(name: "DEPLOY", defaultValue: false, description: "Need to Deploy?")
+        choice(name: "SOCIAL_MEDIA", choices: ["Instagram", "Facebook", "Twitter"], description: "Which Social Media?")
+        password(name: "SECRET", defaultValue: "", description: "Encrypt Key")
     }
     
     options {
         disableConcurrentBuilds()
         timeout(time: 10, unit: 'MINUTES')
     }
-    
+
     stages {
         stage('Prepare') {
 
@@ -22,15 +28,13 @@ pipeline {
                 node { label 'linux-agent' }
             }
             steps {
-                echo "Author : ${AUTHOR}"
-                echo "Email  : ${EMAIL}"
-                echo "Web    : ${WEB}"
-
-                echo "Start Job : ${env.JOB_NAME}"
-                echo "Start Build : ${env.BUILD_NUMBER}"
-                echo "Branch Name : ${env.BRANCH_NAME}"
-                echo "App User  : ${APP_USR}"
-                echo "App Pass  : ${APP_PSW}" 
+                echo "Hello ${params.NAME}"
+                echo "Your description is ${params.DESCRIPTION}"
+                echo "Your social media is ${params.SOCIAL_MEDIA}"
+                echo "Need to deploy : ${params.DEPLOY} to deploy!"
+                echo "Your secret is ${params.SECRET}"
+                
+                echo "Pipeline authorized by ${AUTHOR}"
             }
         }
         stage('Build') {
