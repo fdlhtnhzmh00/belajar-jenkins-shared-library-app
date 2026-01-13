@@ -24,21 +24,25 @@ pipeline {
 
     stages {
         stage("Preparation") {
-            agent {
-                node { 
-                    label "linux-agent" }
-            }
-            stages {
+            parallel {
                 stage("Prepare Java") {
+                    agent { 
+                        node { 
+                            label "linux-agent" } }
                     steps {
                         echo "Prepare Java by Fadilah Tun Hazimah"
                         sh "java -version"
+                        sleep 5
                     }
                 }
                 stage("Prepare Maven") {
+                    agent { 
+                        node { 
+                            label "linux-agent" } }
                     steps {
                         echo "Prepare Maven by Fadilah Tun Hazimah"
                         sh "./mvnw --version"
+                        sleep 5
                     }
                 }
             }
