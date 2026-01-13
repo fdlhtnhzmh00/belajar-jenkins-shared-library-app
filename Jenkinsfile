@@ -144,7 +144,6 @@ pipeline {
     post {
         always {
             echo 'Pipeline Finished. Cleaning up...'
-            deleteDir()
         }
         success {
             echo 'Build SUCCESS!'
