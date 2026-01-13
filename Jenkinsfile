@@ -134,11 +134,16 @@ pipeline {
             }
             agent { node { label 'linux-agent' } }
             steps {
-                echo "Releasing to Production..."
-                sh 'echo "Done!"'
+                withCredentials([usernamePassword(
+                    credentialsId: "fadilah_rahasia",
+                    usernameVariable: "USER",
+                    passwordVariable: "PASSWORD"
+                )]) {
+                    sh 'echo "Release it with -u $USER -p $PASSWORD" > release.txt'
+                    sh 'cat release.txt'
+                }
             }
         }
-
     }
 
     post {
