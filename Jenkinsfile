@@ -23,6 +23,33 @@ pipeline {
     }
 
     stages {
+        stage("OS Setup") {
+            matrix {
+
+                axes {
+                    axis {
+                        name "OS"
+                        values "linux", "windows", "mac"
+                    }
+                    axis {
+                        name "ARC"
+                        values "32", "64"
+                    }
+                }
+                
+                stages {
+                    stage("Setup OS") {
+                        agent { node { label "linux-agent" } }
+                        steps {
+                            echo "Setting up ${OS} with architecture ${ARC}-bit by Fadilah Tun Hazimah"
+                            sleep 2
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
         stage("Preparation") {
             parallel {
                 stage("Prepare Java") {
