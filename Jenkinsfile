@@ -169,7 +169,6 @@ pipeline {
             }
         }
         
-    }
     post {
         always {
             echo 'Fadilah: I will always say Hello again!' 
@@ -184,4 +183,3 @@ pipeline {
             echo 'Don\'t care success or failure, just cleaning up!' 
         }
     }
-}
