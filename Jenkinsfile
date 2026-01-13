@@ -5,10 +5,6 @@ pipeline {
         AUTHOR = "Fadilah Tun Hazimah"
     }
 
-    //triggers {
-    //    cron ("*/5 * * * *")
-    // }
-
     parameters {
         string(name: "NAME", defaultValue: "Guest", description: "What is your name?")
         text(name: "DESCRIPTION", defaultValue: "Guest", description: "Tell me about you")
@@ -36,11 +32,10 @@ pipeline {
                     }
                 }
                 stages {
-                    stage("Setup OS") {
+                    stage("OS Setup") {
                         agent { node { label "linux-agent" } }
                         steps {
-                            echo "Setting up ${OS} with architecture ${ARC}-bit by Fadilah Tun Hazimah"
-                            sleep 2
+                            echo "Setup ${OS} ${ARC}" 
                         }
                     }
                 }
@@ -50,9 +45,7 @@ pipeline {
         stage("Preparation") {
             parallel {
                 stage("Prepare Java") {
-                    agent { 
-                        node { label "linux-agent" } 
-                    }
+                    agent { node { label "linux-agent" } }
                     steps {
                         echo "Prepare Java by Fadilah Tun Hazimah"
                         sh "java -version"
@@ -60,9 +53,7 @@ pipeline {
                     }
                 }
                 stage("Prepare Maven") {
-                    agent { 
-                        node { label "linux-agent" } 
-                    }
+                    agent { node { label "linux-agent" } }
                     steps {
                         echo "Prepare Maven by Fadilah Tun Hazimah"
                         sh "./mvnw --version"
@@ -76,51 +67,37 @@ pipeline {
             environment {
                 APP = credentials('fadilah_rahasia')            
             }
-            agent {
-                node { label 'linux-agent' }
-            }
+            agent { node { label 'linux-agent' } }
             steps {
                 echo "Hello ${params.NAME}"
-                echo "Your description is ${params.DESCRIPTION}"
-                echo "Your social media is ${params.SOCIAL_MEDIA}"
-                echo "Need to deploy : ${params.DEPLOY} to deploy!"
-                echo "Your secret is ${params.SECRET}"
+                echo "Need to deploy : ${params.DEPLOY}"
                 echo "Pipeline authorized by ${AUTHOR}"
             }
         }
 
         stage('Build') {
-            agent {
-                node { label "linux-agent" }
-            }
+            agent { node { label "linux-agent" } }
             steps {
                 script {
-                    for (int i = 0; i < 10; i++) {
-                        echo "Script Iterasi ke-${i} by fdlhtnhzmh"
+                    for (int i = 0; i < 5; i++) {
+                        echo "Script Iterasi ke-${i}"
                     }
                 }
                 echo "Start Build by Fadilah Tun Hazimah"
                 sh 'chmod +x mvnw'
                 sh './mvnw clean compile test-compile'
-                echo "Finish Build by Fadilah Tun Hazimah"
             }
         }
 
         stage('Test') {
-            agent {
-                node { label "linux-agent" }
-            }
+            agent { node { label "linux-agent" } }
             steps {
                 script {
-                    def data = [
-                        "firstName": "Fadilah",
-                        "lastName" : "Tun Hazimah"
-                    ]
+                    def data = [ "firstName": "Fadilah", "lastName" : "Tun Hazimah" ]
                     writeJSON(file: "data.json", json: data) 
                 }
-                echo "Start Test by Fadilah Tun Hazimah"
+                echo "Running Test..."
                 sh './mvnw test'
-                echo "Finish Test by Fadilah Tun Hazimah"
             }
         }
 
@@ -130,29 +107,21 @@ pipeline {
                 ok "Yes, of course"
                 submitter "fdlhtnhzmh,zowy" 
             }
-            agent {
-                node { label "linux-agent" }
-            }
+            agent { node { label "linux-agent" } }
             steps {
-                echo "Hello Deploy 1 by Fadilah Tun Hazimah"
-                sleep(5)
-                echo "Hello Deploy 2 by Fadilah Tun Hazimah"
-                echo "Hello Deploy 3 by Fadilah Tun Hazimah"
+                echo "Deploying application..."
+                sleep(2)
             }
         }
 
         stage('Release') {
             when {
-                expression {
-                    return params.DEPLOY
-                }
+                expression { return params.DEPLOY }
             }
-            agent { 
-                node { label 'linux-agent' } 
-            }
+            agent { node { label 'linux-agent' } }
             steps {
-                echo "Release it by Fadilah Tun Hazimah"
-                sh 'echo "Application Released to Production!"'
+                echo "Releasing to Production..."
+                sh 'echo "Done!"'
             }
         }
 
@@ -160,17 +129,14 @@ pipeline {
 
     post {
         always {
-            echo 'Fadilah: I will always say Hello again!' 
+            echo 'Pipeline Finished. Cleaning up...'
+            cleanWs()
         }
         success {
-            echo 'Yay, success!'
+            echo 'Build SUCCESS!'
         }
         failure {
-            echo 'Oh no, failure!'
-        }
-        cleanup {
-            echo 'Don\'t care success or failure, just cleaning up!' 
+            echo 'Build FAILED!'
         }
     }
-
 }
