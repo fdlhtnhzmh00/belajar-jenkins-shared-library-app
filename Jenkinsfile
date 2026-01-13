@@ -5,9 +5,19 @@ pipeline {
         }
     }
     stages {
-        stage('Hello') {
+        stage('Build') {
             steps {
-                echo 'Hello World'
+                echo 'Build process by Fadilah Tun Hazimah'
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Test process by Fadilah Tun Hazimah'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploy process by Fadilah Tun Hazimah'
             }
         }
     }
