@@ -36,7 +36,7 @@ pipeline {
                     exclude {
                         axis {
                             name "OS"
-                            values "mac"
+                            values "linux"
                         }
                         axis {
                             name "ARC"
@@ -144,7 +144,7 @@ pipeline {
     post {
         always {
             echo 'Pipeline Finished. Cleaning up...'
-            cleanWs()
+            deleteDir()
         }
         success {
             echo 'Build SUCCESS!'
